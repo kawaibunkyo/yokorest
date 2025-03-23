@@ -273,6 +273,7 @@ function displayClusters(clusters) {
     });
 }
 
+/*
 // 個別のエンティティ（店舗）の表示
 function displayEntities(data) {
     data.forEach(item => {
@@ -346,3 +347,81 @@ function displayEntities(data) {
         });
     });
 }
+*/
+
+function displayEntities(data) {
+    data.forEach(item => {
+        // 評価に基づいて高さを変更（評価が高いほど高い）
+        const baseHeight = 50; // 基本の高さ
+        const ratingMultiplier = 40; // 評価1つあたりの高さ
+        
+        // 評価の取得と正規化（1〜5の範囲に）
+        const rating = item.rating === "N/A" || !item.rating ? 1 : Math.min(Math.max(parseFloat(item.rating), 1), 5);
+        
+        // 高さの計算（評価1なら50、評価5なら250）
+        const height = baseHeight + (rating - 1) * ratingMultiplier;
+        
+        // 価格帯の取得と正規化
+        const priceLevel = item.price_level === "N/A" || !item.price_level ? 1 : Math.min(Math.max(parseInt(item.price_level, 10), 1), 4);
+        
+        // 価格帯に基づいた色相の計算（安い：緑、高い：赤紫）
+        const hue = 120 - ((priceLevel - 1) / 3) * 160; // 120（緑）から-40（赤紫）へ
+        const saturation = 80; // 彩度は固定
+        const lightness = 50; // 明度も固定
+        
+        // HSL色の作成
+        const colorHSL = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        
+        // エンティティの説明（情報ウィンドウの内容）
+        const description = `
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <td>${item.name}</td>
+                </tr>
+                <tr>
+                    <th>Price Level</th>
+                    <td>${'¥'.repeat(priceLevel)}</td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>${rating} ★</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>${item.formatted_address}</td>
+                </tr>
+                <tr>
+                    <th>Phone Number</th>
+                    <td>${item.formatted_phone_number}</td>
+                </tr>
+                <tr>
+                    <th>Website</th>
+                    <td><a href="${item.website}" target="_blank">${item.website}</a></td>
+                </tr>
+                <tr>
+                    <th>User Ratings Total</th>
+                    <td>${item.user_ratings_total}</td>
+                </tr>
+            </table>
+        `;
+        
+        // エンティティとして3D四角柱を追加
+        viewer.entities.add({
+            name: item.name,
+            description: description,
+            position: Cesium.Cartesian3.fromDegrees(
+                item.geometry.location.lng,
+                item.geometry.location.lat,
+                height / 2  // 高さの半分を中心位置に設定
+            ),
+            box: {
+                dimensions: new Cesium.Cartesian3(20, 20, height), // 幅・奥行きは固定、高さは評価による
+                material: new Cesium.Color.fromCssColorString(colorHSL), // 価格帯に基づく色
+                outline: true,
+                outlineColor: Cesium.Color.BLACK
+            }
+        });
+    });
+}
+
