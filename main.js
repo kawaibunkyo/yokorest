@@ -352,8 +352,8 @@ function displayEntities(data) {
 function displayEntities(data) {
     data.forEach(item => {
         // 評価に基づいて高さを変更（評価が高いほど高い）
-        const baseHeight = 50; // 基本の高さ
-        const ratingMultiplier = 40; // 評価1つあたりの高さ
+        const baseHeight = 40; // 基本の高さ
+        const ratingMultiplier = 60; // 評価1つあたりの高さ
         
         // 評価の取得と正規化（1〜5の範囲に）
         const rating = item.rating === "N/A" || !item.rating ? 1 : Math.min(Math.max(parseFloat(item.rating), 1), 5);
@@ -366,8 +366,8 @@ function displayEntities(data) {
         
         // 価格帯に基づいた色相の計算（安い：緑、高い：赤紫）
         const hue = 120 - ((priceLevel - 1) / 3) * 160; // 120（緑）から-40（赤紫）へ
-        const saturation = 80; // 彩度は固定
-        const lightness = 50; // 明度も固定
+        const saturation = 40; // 彩度は固定
+        const lightness = 60; // 明度も固定
         
         // HSL色の作成
         const colorHSL = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
