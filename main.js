@@ -366,8 +366,8 @@ function displayEntities(data) {
         
         // 価格帯に基づいた色相の計算（安い：緑、高い：赤紫）
         const hue = 120 - ((priceLevel - 1) / 3) * 160; // 120（緑）から-40（赤紫）へ
-        const saturation = 40; // 彩度は固定
-        const lightness = 60; // 明度も固定
+        const saturation = 60; // 彩度は固定
+        const lightness = 50; // 明度も固定
         
         // HSL色の作成
         const colorHSL = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
