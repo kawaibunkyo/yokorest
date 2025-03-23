@@ -353,7 +353,7 @@ function displayEntities(data) {
     data.forEach(item => {
         // 評価に基づいて高さを変更（評価が高いほど高い）
         const baseHeight = 20; // 基本の高さ
-        const ratingMultiplier = 40; // 評価1つあたりの高さ
+        const ratingMultiplier = 60; // 評価1つあたりの高さ
         
         // 評価の取得と正規化（1〜5の範囲に）
         const rating = item.rating === "N/A" || !item.rating ? 1 : Math.min(Math.max(parseFloat(item.rating), 1), 5);
